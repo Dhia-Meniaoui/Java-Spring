@@ -7,6 +7,7 @@ import com.project.bimapispring.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -15,14 +16,17 @@ import java.util.List;
 public class AppUserServiceImp implements AppUserService{
 
     @Autowired
-    private AppUserRepository appuserRepository;
+    private final AppUserRepository appuserRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
     public AppUser saveAppUser(AppUser user) {
         log.info("savin new user to the data base");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return appuserRepository.save(user);
     }
 
